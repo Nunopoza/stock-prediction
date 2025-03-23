@@ -55,7 +55,6 @@ try
     ylabel('Stock Price');
     title('Historical Stock Prices');
     grid on;
-    saveas(gcf, '/Users/nunopoza/stock-prediction/results/montecarlo_simulation.png');  
     
     % Plot 2: Monte Carlo Simulation Results
     subplot(2, 2, 2);
@@ -64,8 +63,6 @@ try
     ylabel('Stock Price');
     title('Monte Carlo Simulation of Stock Prices');
     grid on;
-    saveas(gcf, '/Users/nunopoza/stock-prediction/results/montecarlo_simulation_results.png');  
-
     
     % Plot 3: Historical and Monte Carlo Combined
     subplot(2, 2, [3, 4]);
@@ -78,7 +75,7 @@ try
     title('Historical and Monte Carlo Simulation Comparison');
     legend('Historical Data', 'Monte Carlo Simulation', 'Location', 'northwest');
     grid on;
-    saveas(gcf, '/Users/nunopoza/stock-prediction/results/montecarlo_simulation_with_price.png');  
+    saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_montecarlo/montecarlo_simulation.png');  
     
     % Adjust figure layout
     sgtitle('Stock Price Analysis');
@@ -105,7 +102,7 @@ try
     disp(['Probability of minimum price: ', num2str(probMin)]);
     disp(['Mean predicted price: ', num2str(meanPrice)]);
     T_out = table(meanPrice, maxPrice, minPrice, probPriceIncrease, probPriceDecrease, probMax, probMin);
-    writetable(T_out, '/Users/nunopoza/stock-prediction/results/montecarlo_summary.csv');
+    writetable(T_out, '/Users/nunopoza/stock-prediction/results/results_montecarlo/montecarlo_summary.csv');
 catch ME
     % Display error message
     disp('Error occurred:');
