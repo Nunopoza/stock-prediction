@@ -4,14 +4,15 @@ clear;
 clc;
 try
     % Load stock price data from a CSV file (adjust filename and path as needed)
-    stockData = readtable('sp500_data.csv', 'PreserveVariableNames', true); %%Change the .CSv
+    stockData = readtable(fullfile('/Users/nunopoza/stock-prediction', 'data', 'sp500_data.csv'), 'PreserveVariableNames', true);
     
     % Only show data for 2025
-    stockData_1_250 = stockData(1:250, :);
+    nDays = 250; 
+    stockData_1_n = stockData(1:nDays, :);
     
     % Extract relevant columns from the table
-    dates = stockData.timestamp;
-    closes = stockData.close;
+    dates = stockData_1_n.timestamp;
+    closes = stockData_1_n.close;
     % Calculate daily log returns
     dailyReturns = diff(log(closes)); % Log returns for accuracy
     % Calculate volatility (standard deviation of daily log returns)
@@ -26,7 +27,7 @@ try
     disp(['Historical mu (annual): ', num2str(mu_annual)]);
     % Define parameters for Monte Carlo simulation
     T = 5;                   % Time period in years (adjust as needed)
-    nSimulations = 10000;    % Number of Monte Carlo simulations
+    nSimulations = 1000;    % Number of Monte Carlo simulations
     nSteps = 252;            % Number of trading days in a year
     dt = T / nSteps;         % Time step
     S0 = closes(end);        % Initial stock price (last closing price in the data)
@@ -54,6 +55,8 @@ try
     ylabel('Stock Price');
     title('Historical Stock Prices');
     grid on;
+    saveas(gcf, '/Users/nunopoza/stock-prediction/results/montecarlo_simulation.png');  
+    
     % Plot 2: Monte Carlo Simulation Results
     subplot(2, 2, 2);
     plot(dates(end) + (1:nSteps) * dt * 252, priceMatrix', 'Color', [0.5, 0.5, 0.5]);
@@ -61,6 +64,9 @@ try
     ylabel('Stock Price');
     title('Monte Carlo Simulation of Stock Prices');
     grid on;
+    saveas(gcf, '/Users/nunopoza/stock-prediction/results/montecarlo_simulation_results.png');  
+
+    
     % Plot 3: Historical and Monte Carlo Combined
     subplot(2, 2, [3, 4]);
     plot(dates, closes, 'b-', 'LineWidth', 1.5);
@@ -72,6 +78,8 @@ try
     title('Historical and Monte Carlo Simulation Comparison');
     legend('Historical Data', 'Monte Carlo Simulation', 'Location', 'northwest');
     grid on;
+    saveas(gcf, '/Users/nunopoza/stock-prediction/results/montecarlo_simulation_with_price.png');  
+    
     % Adjust figure layout
     sgtitle('Stock Price Analysis');
     set(gcf, 'Position', [10, 100, 1200, 800]); % Adjust figure position (left: 10 pixels, top: 100 pixels, width: 1200, height: 800)
@@ -87,7 +95,7 @@ try
  
     finalPrices = priceMatrix(:, end);
     maxPrice = max(finalPrices);
-    meanPrice=mean(finalPrices);
+    meanPrice= mean(finalPrices);
     minPrice = min(finalPrices);
     probMax = sum(finalPrices == maxPrice) / nSimulations;
     probMin = sum(finalPrices == minPrice) / nSimulations;
@@ -96,8 +104,12 @@ try
     disp(['Minimum predicted price: ', num2str(minPrice)]);
     disp(['Probability of minimum price: ', num2str(probMin)]);
     disp(['Mean predicted price: ', num2str(meanPrice)]);
+    T_out = table(meanPrice, maxPrice, minPrice, probPriceIncrease, probPriceDecrease, probMax, probMin);
+    writetable(T_out, '/Users/nunopoza/stock-prediction/results/montecarlo_summary.csv');
 catch ME
     % Display error message
     disp('Error occurred:');
     disp(ME.message);
 end
+
+
