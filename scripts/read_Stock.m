@@ -1,52 +1,52 @@
 clc; clear; close all;
 
-% 📌 Nombre del archivo CSV con los datos del S&P 500
-filename_sp500 = 'sp500_data.csv';
+%%  Nombre del archivo CSV con los datos del S&P 500
+filename_sp500 = fullfile('data', 'sp500_data.csv');
 
-% 📌 Leer archivo CSV
+%  Leer archivo CSV
 opts = detectImportOptions(filename_sp500, 'VariableNamingRule', 'preserve');
 sp500_data = readtable(filename_sp500, opts);
 
-% 📌 Detectar columnas de fecha y precio de cierre
+%  Detectar columnas de fecha y precio de cierre
 fecha_columna = sp500_data.Properties.VariableNames{1};  % Primera columna (Fecha)
 precio_columna = sp500_data.Properties.VariableNames{5}; % Última columna (Precio cierre)
 
-% 📌 Convertir a formato datetime
+%  Convertir a formato datetime
 dates_sp500 = datetime(sp500_data.(fecha_columna), 'InputFormat', 'yyyy-MM-dd', 'Format', 'yyyy-MM-dd');
 prices_sp500 = sp500_data.(precio_columna);
 
-% 📌 Ordenar datos por fecha
+%  Ordenar datos por fecha
 [dates_sp500, idx] = sort(dates_sp500);
 prices_sp500 = prices_sp500(idx);
 
 disp("Datos del S&P 500 cargados correctamente.");
 
-% 📌 Nombre del archivo Excel con Margin Debt
-filename_finra = 'margin-statistics.xlsx';
+%  Nombre del archivo Excel con Margin Debt
+filename_finra = fullfile('data','margin-statistics.xlsx');
 
-% 📌 Leer datos
+%  Leer datos
 opts = detectImportOptions(filename_finra, 'Sheet', 1, 'VariableNamingRule', 'preserve');
 margin_data = readtable(filename_finra, opts);
 
-% 📌 Columnas correctas
+%  Columnas correctas
 fecha_columna = 'Year-Month';
 deuda_columna = 'Debt';
 
-% 📌 Convertir fechas y valores
+%  Convertir fechas y valores
 margin_dates = datetime(margin_data.(fecha_columna), 'InputFormat', 'yyyy-MM');
 margin_values = margin_data.(2);
 
-% 📌 Calcular media móvil de 12 meses
+%  Calcular media móvil de 12 meses
 window_12m = 12;
 margin_ma_12m = movmean(margin_data.(2), window_12m, 'omitnan');
 
 disp("Datos de Margin Debt cargados correctamente.");
 
-% 📌 Encontrar fechas comunes entre ambos conjuntos de datos
+%  Encontrar fechas comunes entre ambos conjuntos de datos
 [common_dates, idx_sp500, idx_margin] = intersect(dates_sp500, margin_dates);
 sp500_filtered = prices_sp500(idx_sp500);
 
-% 📌 Ajustar longitudes de los datos
+%  Ajustar longitudes de los datos
 min_length = min([length(common_dates), length(sp500_filtered), length(margin_values)]);
 common_dates = common_dates(1:min_length);
 sp500_filtered = sp500_filtered(1:min_length);
@@ -55,7 +55,7 @@ margin_ma_12m = margin_ma_12m(idx_margin(1:min_length));
 
 disp("Fechas alineadas correctamente.");
 
-% 📌 Parámetros de la estrategia
+%%  Parámetros de la estrategia
 buy_threshold = 0.005; % Comprar si Margin Debt MA está 2% arriba
 sell_threshold = -0.005; % Vender si está 2% abajo
 stop_loss = -0.15; % -10%
@@ -74,7 +74,7 @@ end
 
 disp("Estrategia de trading calculada.");
 
-% 📌 Configuración inicial
+%  Configuración inicial
 initial_cash = 10000;
 max_holding_period = 12; % Máximo 6 meses manteniendo posición
 holding_period = 0;
@@ -88,7 +88,7 @@ trade_returns = [];
 dinero_metido_despues = [10000];
 buy_price_list = [];
 media_movil_sp500 = movmean(sp500_filtered, [12 0]); % Media móvil de 8 meses del S&P500
-espera_minima = 1; % Espera mínima en meses entre operaciones
+espera_minima = 3; % Espera mínima en meses entre operaciones
 last_trade_index = -inf; % Índice temporal última operación
 
 for i = 2:length(sp500_filtered)
@@ -146,24 +146,24 @@ for i = 2:length(sp500_filtered)
     portfolio_value(i) = cash + (shares * sp500_filtered(i));
 end
 
-% 📌 Rentabilidad final (%)
+%%  Rentabilidad final (%)
 final_return = (portfolio_value(end) - initial_cash) / initial_cash * 100;
 
-% 📌 Rentabilidad anualizada (%)
+%  Rentabilidad anualizada (%)
 num_years = years(common_dates(end) - common_dates(1));
 annualized_return = ((portfolio_value(end) / initial_cash)^(1/num_years) - 1) * 100;
 
-% 📌 Máxima caída (Drawdown)
+%  Máxima caída (Drawdown)
 max_value = max(portfolio_value);
 max_drawdown = min(portfolio_value - max_value) / max_value * 100;
 
-% 📌 Ratio de Sharpe
-% 📌 Evitar cálculos con NaN
+%  Ratio de Sharpe
+%  Evitar cálculos con NaN
 valid_indices = ~isnan(portfolio_value);
 valid_portfolio = portfolio_value(valid_indices);
-risk_free_rate = 0.05; % Supongamos 2% de tasa libre de riesgo anual
+risk_free_rate = 0.05; % Supongamos 5% de tasa libre de riesgo anual
 
-% 📌 Calcular Ratio de Sharpe alternativo
+%  Calcular Ratio de Sharpe alternativo
 if length(valid_portfolio) > 2
     total_return = (valid_portfolio(end) - valid_portfolio(1)) / valid_portfolio(1); % Rentabilidad total
     vol = std(valid_portfolio); % Desviación estándar del portafolio
@@ -179,7 +179,7 @@ end
 
 disp("Ratio Sharpe: " + num2str(sharpe_ratio, '%.2f'));
 
-% 📌 Calcular tasa de acierto (% de operaciones ganadoras)
+%  Calcular tasa de acierto (% de operaciones ganadoras)
 if num_trades > 0
     % Solo contamos las operaciones cerradas (pares de compra/venta)
     num_closed_trades = num_trades / 2;  
@@ -196,7 +196,7 @@ end
 disp("Tasa de acierto: " + num2str(win_rate, '%.2f') + " %");
 
 
-% 📌 Imprimir resultados
+%%  Imprimir resultados
 disp("----- Resultados de la Estrategia -----");
 disp("Rentabilidad final: " + num2str(final_return, '%.2f') + " %");
 disp("Cartera final: " + fix(portfolio_value(end)) + " $");
@@ -209,7 +209,7 @@ disp("Tasa de acierto: " + num2str(win_rate, '%.2f') + " %");
 disp("Rentabilidades de cada operación:");
 disp(trade_returns * 100);
 
-% 📌 Verificar estadísticas básicas
+%  Verificar estadísticas básicas
 disp("Rentabilidad media por operación: " + num2str(mean(trade_returns), '%.2f') + " %");
 disp("Rentabilidad máxima: " + num2str(max(trade_returns), '%.2f') + " %");
 disp("Rentabilidad mínima: " + num2str(min(trade_returns), '%.2f') + " %");
@@ -248,4 +248,4 @@ ax3 = nexttile;
 plot(ax3,x1,y5,x1,y6)
 
 ax4 = nexttile;
-plot(ax4, x1, y1, x1, y7, "r.", 'MarkerSize', 10)
+plot(ax4, x1, y1, x1, y7, "r+", 'MarkerSize', 10)
