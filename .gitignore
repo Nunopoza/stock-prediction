@@ -1,0 +1,19 @@
+# Archivos temporales de MATLAB
+*.asv
+*.autosave
+*.m~ 
+*.mat
+*.fig
+*.log
+
+# Archivos generados por Live Scripts
+*.mlx
+*.mlapp
+
+# Archivos ocultos del sistema
+.DS_Store
+Thumbs.db
+
+# Directorios ocultos
+.idea/
+.vscode/
