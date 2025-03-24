@@ -274,6 +274,7 @@ ylabel('Deuda de Margen');
 title('Deuda de Margen vs. Media Móvil 12M');
 legend('Deuda actual', 'Media móvil 12M', 'Location', 'northwest');
 grid on;
+saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_vs_ma12.png');  
 
 figure;
 histogram(trade_returns * 100, 20);
@@ -281,7 +282,7 @@ xlabel('Rentabilidad por operación (%)');
 ylabel('Frecuencia');
 title('Histograma de Rentabilidades por Operación');
 grid on;
-saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_vs_ma12.png');  
+saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_profit.png');  
 
 
 drawdown = (y6 - cummax(y6)) ./ cummax(y6) * 100;
