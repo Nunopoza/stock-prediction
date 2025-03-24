@@ -245,11 +245,48 @@ y7 = buy_price_listT;
 
 % Bottom plotfigure;
 figure;
-ax3 = nexttile;
-plot(ax3,x1,y5,x1,y6)
+plot(x1, y5, 'k--', 'LineWidth', 1.5); hold on;
+plot(x1, y6, 'b-', 'LineWidth', 2);
+xlabel('Fecha');
+ylabel('Valor ($)');
+title('Evolución del Portafolio vs. Aportes de Capital');
+legend('Dinero aportado', 'Valor de la cartera', 'Location', 'northwest');
+grid on;
 
-ax4 = nexttile;
-plot(ax4, x1, y1, x1, y7, "r+", 'MarkerSize', 10)
+figure;
+plot(x1, y1, 'LineWidth', 1.5); hold on;
+plot(x1, y7, 'r+', 'MarkerSize', 10, 'LineWidth', 2);
+xlabel('Fecha');
+ylabel('Precio del S&P 500');
+title('Precio del S&P 500 con señales de compra');
+legend('S&P 500', 'Compras', 'Location', 'northwest');
+grid on;
+
+figure;
+plot(x1, y3, 'LineWidth', 1.5); hold on;
+plot(x1, y4, 'r--', 'LineWidth', 2);
+xlabel('Fecha');
+ylabel('Deuda de Margen');
+title('Deuda de Margen vs. Media Móvil 12M');
+legend('Deuda actual', 'Media móvil 12M', 'Location', 'northwest');
+grid on;
+
+figure;
+histogram(trade_returns * 100, 20);
+xlabel('Rentabilidad por operación (%)');
+ylabel('Frecuencia');
+title('Histograma de Rentabilidades por Operación');
+grid on;
+
+drawdown = (y6 - cummax(y6)) ./ cummax(y6) * 100;
+
+figure;
+plot(x1, drawdown, 'm', 'LineWidth', 2);
+xlabel('Fecha');
+ylabel('Drawdown (%)');
+title(' Drawdown del Portafolio');
+grid on;
+
 saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_simulation.png');  
 
 % ======== Guardar resumen de resultados en CSV ========
