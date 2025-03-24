@@ -1,8 +1,0 @@
-===== Tests Avanzados - Sensibilidad y Visualización =====
-\nA1: Sensibilidad a la volatilidad (Vega)
- Gráfico Vega generado
-\nA2: Sensibilidad al tiempo (Theta)
- Gráfico Theta generado
-\nA3: Superficie 3D del valor del Call (S vs. sigma)
- Superficie 3D generada
-\n===== Tests avanzados completados correctamente =====
