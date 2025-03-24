@@ -252,6 +252,8 @@ ylabel('Valor ($)');
 title('Evolución del Portafolio vs. Aportes de Capital');
 legend('Dinero aportado', 'Valor de la cartera', 'Location', 'northwest');
 grid on;
+saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_evolution.png');  
+
 
 figure;
 plot(x1, y1, 'LineWidth', 1.5); hold on;
@@ -261,6 +263,8 @@ ylabel('Precio del S&P 500');
 title('Precio del S&P 500 con señales de compra');
 legend('S&P 500', 'Compras', 'Location', 'northwest');
 grid on;
+saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_buys.png');  
+
 
 figure;
 plot(x1, y3, 'LineWidth', 1.5); hold on;
@@ -277,6 +281,8 @@ xlabel('Rentabilidad por operación (%)');
 ylabel('Frecuencia');
 title('Histograma de Rentabilidades por Operación');
 grid on;
+saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_vs_ma12.png');  
+
 
 drawdown = (y6 - cummax(y6)) ./ cummax(y6) * 100;
 
@@ -287,7 +293,7 @@ ylabel('Drawdown (%)');
 title(' Drawdown del Portafolio');
 grid on;
 
-saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_simulation.png');  
+saveas(gcf, '/Users/nunopoza/stock-prediction/results/results_marginDebt/marginDebt_drawdown.png');  
 
 % ======== Guardar resumen de resultados en CSV ========
 
