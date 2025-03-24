@@ -1,14 +1,20 @@
 ===== Test del Modelo Black-Scholes =====
 \nT1: Cálculo básico Call/Put
- Call = 260.14, Put = 246.56
+Call = 341.07, Put = 244.45
 \nT2: Paridad Put-Call
-Paridad verificada: Call - Put = 111.11 ≈ 111.11
-\nT3: Opción in-the-money (S >> K)
- Call = 598.85, Put = 85.27
-\nT4: Opción out-of-the-money (S << K)
- Call = 70.46, Put = 556.89
-\nT5: Gráfico limpio
- Gráfico generado y guardado correctamente.
-\nT6: Vencimiento inmediato (T = 0)
- Call = 0.00, Put = 0.00 (vencimiento inmediato)
+Paridad verificada: Call - Put = 128.32 ≈ 128.32
+\nT3: Opción in-the-money
+Call = 625.43, Put = 100.83
+\nT4: Opción out-of-the-money
+Call = 165.90, Put = 436.86
+\nT5: Gráfico Call/Put vs S
+Gráfico Call/Put guardado.
+\nT6: Vencimiento inmediato (T=0)
+Call = 0.00, Put = 32.43 (T = 0)
+\nA1: Sensibilidad a la volatilidad (Vega)
+Gráfico Vega guardado.
+\nA2: Sensibilidad al tiempo (Theta)
+Gráfico Theta guardado.
+\nA3: Superficie 3D (Call vs S y sigma)
+Superficie 3D guardada.
 \n===== Todos los tests completados correctamente =====
